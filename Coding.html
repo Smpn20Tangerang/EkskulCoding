@@ -1,0 +1,412 @@
+<!DOCTYPE html>      <html lang="en">        <head>        
+  <meta charset="UTF-8" />        
+  <title>Ekskul Coding Dupta</title>        
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />        
+  <style>        
+    * { margin: 0; padding: 0; box-sizing: border-box; }        
+    html, body {        
+      height: 100%;        
+      font-family: Arial, sans-serif;        
+      background: linear-gradient(to right, #00c6ff, #0072ff);        
+      overflow: hidden;        
+    }      
+    .loading-screen {        
+  position: fixed;        
+  top: -10%; 
+  left: 0;        
+  width: 100vw; 
+  height: 100vh;        
+  background: linear-gradient(to right, #00c6ff, #0072ff);        
+  display: flex;        
+  justify-content: center;        
+  align-items: center;        
+  z-index: 3000;        
+  flex-direction: column;        
+  color: white;        
+  font-size: 24px;        
+  font-weight: bold;        
+  transition: opacity 0.5s ease-out;        
+}        .progress-bar {
+width: 80%;
+height: 20px;
+margin-top: 20px;
+background-color: rgba(255, 255, 255, 0.3);
+border-radius: 10px;
+overflow: hidden;
+box-shadow: 0 0 10px rgba(255,255,255,0.4);
+}
+
+.progress-fill {
+height: 100%;
+width: 0%;
+background-color: white;
+border-radius: 10px 0 0 10px;
+transition: width 0.2s ease;
+}
+
+.label {
+width: 100%;
+background-color: rgba(255, 255, 255, 0.2);
+border-radius: 0 0 12px 12px;
+padding: 20px;
+text-align: center;
+font-size: 18px;
+font-weight: bold;
+color: white;
+backdrop-filter: blur(5px);
+position: fixed;
+top: 0;
+left: 0;
+z-index: 1000;
+display: none;
+}
+
+.menu-button {
+position: fixed;
+top: 20px;
+left: 20px;
+background: none;
+border: none;
+font-size: 30px;
+color: white;
+cursor: pointer;
+z-index: 1100;
+transition: transform 0.5s ease;
+}
+
+.menu-button.rotating { transform: rotate(180deg); }
+.menu-button span { display: inline-block; transition: opacity 0.3s ease; }
+.menu-button .icon-x { display: none; }
+.menu-button.open .icon-bars { display: none; }
+.menu-button.open .icon-x { display: inline-block; }
+
+.sidebar {
+position: fixed;
+top: 0;
+left: -250px;
+width: 250px;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+backdrop-filter: blur(10px);
+padding: 60px 20px;
+transition: left 0.3s ease;
+z-index: 1050;
+}
+
+.sidebar.open { left: 0; }
+.sidebar button {
+display: block;
+width: 100%;
+margin: 10px 0;
+padding: 10px;
+background-color: #ffffff22;
+border: none;
+color: white;
+font-size: 18px;
+cursor: pointer;
+border-radius: 6px;
+text-align: left;
+}
+
+.scroll-container {
+position: absolute;
+top: 80px;
+bottom: 0;
+left: 0;
+right: 0;
+overflow-y: auto;
+padding: 20px;
+display: none;
+}
+
+.page {
+display: none;
+max-width: 800px;
+margin: auto;
+color: white;
+}
+
+.page.active { display: block; }
+.page img {
+width: 100%;
+max-width: 500px;
+border-radius: 10px;
+margin-top: 30px;
+}
+
+h1 { font-size: 32px; margin-bottom: 10px; }
+h2 { font-size: 20px; margin-bottom: 15px; font-weight: normal; }
+p { font-size: 18px; line-height: 1.6; }
+
+.scroll-effect {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.6s ease-out;
+}
+
+.scroll-effect.show {
+opacity: 1;
+transform: translateY(0);
+}
+
+.form-container {
+background-color: rgba(255, 255, 255, 0.95);
+padding: 40px;
+border-radius: 20px;
+max-width: 400px;
+margin: 20px auto;
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+animation: slideIn 0.8s ease-out;
+color: black;
+}
+
+.form-container h1 {
+text-align: center;
+margin-bottom: 25px;
+}
+
+.input-group, .password-container {
+position: relative;
+width: 100%;
+margin-bottom: 20px;
+}
+
+.input-group input, .password-container input {
+width: 100%;
+padding: 12px;
+border: 1px solid #ccc;
+border-radius: 10px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-password, .toggle-eye {
+position: absolute;
+right: 12px;
+top: 50%;
+transform: translateY(-50%);
+background: transparent;
+border: none;
+cursor: pointer;
+font-size: 14px;
+opacity: 0.6;
+}
+
+.btn {
+width: 100%;
+padding: 12px;
+background-color: #3b82f6;
+color: white;
+border: none;
+border-radius: 10px;
+font-size: 16px;
+cursor: pointer;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:hover {
+background-color: #2563eb;
+}
+
+.switch-link {
+text-align: center;
+margin-top: 15px;
+font-size: 14px;
+}
+
+.switch-link a {
+color: #3b82f6;
+text-decoration: none;
+font-weight: bold;
+cursor: pointer;
+}
+
+@keyframes slideIn {
+from { transform: translateY(-30px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+
+.shake {
+animation: shake 0.3s;
+}
+
+@keyframes shake {
+0% { transform: translateX(0); }
+25% { transform: translateX(-5px); }
+50% { transform: translateX(5px); }
+75% { transform: translateX(-5px); }
+100% { transform: translateX(0); }
+}
+
+#signupBox { display: none; }
+
+  </style>        
+</head>        
+<body>      <div class="loading-screen" id="loadingScreen">        
+  <div>Memuat Halaman...</div>        
+  <div class="progress-bar">        
+    <div class="progress-fill" id="progressFill"></div>        
+  </div>        
+</div>      <button class="menu-button" id="menuToggle">        
+  <span class="icon-bars">☰</span>        
+  <span class="icon-x">✖</span>        
+</button>      <div class="label" id="topLabel">Ekskul Coding SMPN20 Tangerang</div>      <div class="sidebar" id="sidebar">        
+  <button onclick="showPage('home')">Home</button>        
+  <button onclick="showPage('sejarah')">Sejarah</button>        
+  <button onclick="showPage('login')">Login</button>        
+</div>      <div class="scroll-container" id="scrollFrame">        
+  <div class="page active scroll-effect" id="home">        
+    <h1>EKSKUL CODING DUPTA</h1>        
+    <h2>SMP Negeri 20 Tangerang</h2>        
+    <p>Ekstrakurikuler coding membantu siswa memahami teknologi sejak dini.</p>        
+    <img src="https://i.ibb.co/z8kVp3c/coding-kids.png" alt="Coding Kids">        
+  </div>        <div class="page scroll-effect" id="sejarah">        
+    <h3>Sejarah Ekskul Coding</h3>        
+    <p>Ekskul Coding dimulai tanggal 06 Januari 2024 untuk kelas 7 dan 8 tahun pelajaran 2025-2026.</p>        
+  </div>        <div class="page scroll-effect" id="login">        
+    <div class="form-container" id="loginBox">        
+      <h1>Login</h1>        
+      <div class="input-group">        
+        <input type="text" id="username" placeholder="Username or Email" required>        
+      </div>        
+      <div class="password-container">        
+        <input type="password" id="password" placeholder="Password" required>        
+        <button type="button" class="toggle-password" onclick="togglePassword('password', this)">🙈</button>        
+      </div>        
+      <button type="button" class="btn" onclick="login()">Login</button>        
+      <div class="switch-link">Belum punya akun? <a onclick="showSignup()">Sign up</a></div>        
+    </div>      <div class="form-container" id="signupBox">        
+  <h1>Sign Up</h1>        
+  <div class="input-group">        
+    <input type="text" id="newUsername" placeholder="Username" required>        
+  </div>        
+  <div class="password-container">        
+    <input type="password" id="newPassword" placeholder="Password" required>        
+    <span class="toggle-eye" onclick="togglePassword('newPassword', this)">🙈</span>        
+  </div>        
+  <div class="password-container">        
+    <input type="password" id="confirmPassword" placeholder="Ketik Ulang Password" required>        
+    <span class="toggle-eye" onclick="togglePassword('confirmPassword', this)">🙈</span>        
+  </div>        
+  <button type="button" class="btn" onclick="signUp()">Buat Akun</button>        
+  <div class="switch-link">Sudah punya akun? <a onclick="showLogin()">Login</a></div>        
+</div>    </div>        
+</div>      <script>        
+  let percent = 0;        
+  const loadingScreen = document.getElementById('loadingScreen');        
+  const progressFill = document.getElementById('progressFill');        
+  const topLabel = document.getElementById('topLabel');        
+  const scrollFrame = document.getElementById('scrollFrame');        const loadingInterval = setInterval(() => {
+percent++;
+progressFill.style.width = percent + '%';
+if (percent >= 100) {
+clearInterval(loadingInterval);
+loadingScreen.style.opacity = '0';
+setTimeout(() => {
+loadingScreen.style.display = 'none';
+topLabel.style.display = 'block';
+scrollFrame.style.display = 'block';
+}, 600);
+}
+}, 50);
+
+const toggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+toggle.addEventListener('click', () => {
+sidebar.classList.toggle('open');
+toggle.classList.toggle('open');
+});
+
+function showPage(id) {
+document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+sidebar.classList.remove('open');
+toggle.classList.remove('open');
+}
+
+const observer = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('show');
+}
+});
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.scroll-effect').forEach(el => observer.observe(el));
+
+function togglePassword(fieldId, btn) {
+const input = document.getElementById(fieldId);
+if (input.type === "password") {
+input.type = "text";
+btn.textContent = "👁️";
+} else {
+input.type = "password";
+btn.textContent = "🙈";
+}
+}
+
+function showSignup() {
+document.getElementById("loginBox").style.display = "none";
+document.getElementById("signupBox").style.display = "block";
+}
+
+function showLogin() {
+document.getElementById("signupBox").style.display = "none";
+document.getElementById("loginBox").style.display = "block";
+}
+
+function login() {
+const username = document.getElementById("username").value.trim();
+const password = document.getElementById("password").value.trim();
+const loginBox = document.getElementById("loginBox");
+
+if (!username || !password) {        
+  alert("Silakan isi username dan password.");        
+  return;        
+}        
+    
+const akun = JSON.parse(localStorage.getItem("akun")) || [];        
+const cocok = akun.find(a => a.username === username && a.password === password);        
+    
+if (cocok) {        
+  alert("Login berhasil!");        
+  window.location.href = "https://example.com"; // Ganti ke tujuan        
+} else {        
+  loginBox.classList.add('shake');        
+  setTimeout(() => loginBox.classList.remove('shake'), 300);        
+  alert("Akun tidak ditemukan atau password salah!");        
+}
+
+}
+
+function signUp() {
+const username = document.getElementById('newUsername').value.trim();
+const password = document.getElementById('newPassword').value;
+const confirmPassword = document.getElementById('confirmPassword').value;
+
+if (!username || !password || !confirmPassword) {        
+  alert("Semua kolom harus diisi!");        
+  return;        
+}        
+    
+if (password !== confirmPassword) {        
+  alert("Password tidak cocok!");        
+  return;        
+}        
+    
+let akunTersimpan = JSON.parse(localStorage.getItem("akun")) || [];        
+const sudahAda = akunTersimpan.find(a => a.username === username);        
+if (sudahAda) {        
+  alert("Username sudah digunakan!");        
+  return;        
+}        
+    
+akunTersimpan.push({ username, password });        
+localStorage.setItem("akun", JSON.stringify(akunTersimpan));        
+alert("Akun berhasil dibuat! Silakan login.");        
+showLogin();
+
+}
+</script>      </body>
+
+</html>  Buat posisi loading screen ama labelnya agak naikan ke atas
+
